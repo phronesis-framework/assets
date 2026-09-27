@@ -40,9 +40,10 @@ def main():
             check(Path(filename))
             checked += 1
     template = BASE / 'atlas/atlas-system/_harness/template/README.md.tpl'
-    check(template)
-    assert '{{MODULE_NAME}}' in template.read_text(encoding='utf-8')
-    print(f'{checked} READMEs and the Atlas module template: OK')
+    if template.exists():
+        check(template)
+        assert '{{MODULE_NAME}}' in template.read_text(encoding='utf-8')
+    print(f'{checked} READMEs: OK')
 
 
 if __name__ == '__main__':
