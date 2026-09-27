@@ -102,7 +102,8 @@ def main():
                 source.write_text(content, encoding='utf-8')
                 subprocess.run(['rsvg-convert', '-w', str(width), '-h', str(height), '-o', str(png), str(source)], check=True)
             readme = assetroot / ('public/assets/README.md' if root == 'phronesis-framework' else 'README.md')
-            readme.write_text(f'# {spec[1]} — Brand assets\n\n'
+            if not readme.exists():
+                readme.write_text(f'# {spec[1]} — Brand assets\n\n'
                 'Shared variant convention across the four organizations.\n\n'
                 '| Variant | Background | Artwork |\n|---|---|---|\n'
                 '| Horizontal / vertical | Transparent | Brand-colored symbol, dark text |\n'
@@ -125,13 +126,16 @@ def main():
             }[root]
             for destination in destinations:
                 target = BASE / root / destination
-                shutil.copytree(assetroot / svgdir, target, dirs_exist_ok=True)
+                shutil.copytree(assetroot / svgdir, target, dirs_exist_ok=True,
+                                ignore=shutil.ignore_patterns('README.md'))
                 pngtarget = target.parent.parent / 'public_png/assets' if root == 'phronesis-framework' else target.parent / pngdir
                 if root == 'phronesis-framework' and 'branding' not in destination:
                     continue
                 shutil.copytree(assetroot / pngdir, pngtarget, dirs_exist_ok=True)
                 if root != 'phronesis-framework':
-                    shutil.copyfile(readme, target.parent / 'README.md')
+                    copied_readme = target.parent / 'README.md'
+                    if not copied_readme.exists():
+                        shutil.copyfile(readme, copied_readme)
             if root == 'theracode-es':
                 for project in ['theracode-template', 'theracode-llm']:
                     shutil.copyfile(assetroot / pngdir / 'lockup/lockup-horizontal-dark.png',
@@ -140,6 +144,9 @@ def main():
                 for project in ['phronesis-web', 'phronesis-framework']:
                     shutil.copyfile(assetroot / pngdir / 'lockup/lockup-horizontal-dark.png',
                                     BASE / root / project / 'public/assets/phronesis-banner.png')
+                    site_banner = BASE / root / project / 'public/assets/lockup/lockup-horizontal-dark.png'
+                    site_banner.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(assetroot / pngdir / 'lockup/lockup-horizontal-dark.png', site_banner)
             banner = BASE / root / '.github/profile/assets/lockup-horizontal-dark.png'
             shutil.copyfile(assetroot / pngdir / 'lockup/lockup-horizontal-dark.png', banner)
         check(spec, files)

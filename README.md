@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="../../public_png/assets/lockup/lockup-horizontal-dark.png" alt="phronesis — Brand assets" width="100%" />
+  <img src="public_png/assets/lockup/lockup-horizontal-dark.png" alt="phronesis — Brand assets" width="100%" />
 </div>
 
 <div align="center">
@@ -13,7 +13,7 @@
 </div>
 
 <div align="center">
-  <a href="../../public_png/assets/lockup/">assets</a>
+  <a href="public_png/assets/lockup/">assets</a>
 </div>
 
 <br />
